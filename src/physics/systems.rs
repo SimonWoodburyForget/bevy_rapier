@@ -53,7 +53,7 @@ pub fn create_body_and_collider_system(
 
 #[test]
 fn test_create_body_and_collider_system() {
-    use bevy::ecs::Schedule;
+    use bevy::ecs::{Schedule, Stage};
 
     let mut resources = Resources::default();
     resources.insert(RigidBodySet::new());
@@ -76,7 +76,7 @@ fn test_create_body_and_collider_system() {
         world.spawn((Parent(body_only_entity), ColliderBuilder::ball(0.25)));
 
     let mut schedule = Schedule::default();
-    schedule.add_stage("physics_test");
+    schedule.add_stage("physics_test", SystemStage::parallel());
     schedule.add_system_to_stage("physics_test", create_body_and_collider_system);
     schedule.initialize(&mut world, &mut resources);
     schedule.run(&mut world, &mut resources);
